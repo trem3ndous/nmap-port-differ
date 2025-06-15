@@ -1,11 +1,11 @@
 # Nmap Port Differ
 
-Simple nmap differ script, compares open ports using `ndiff`, and optionally sends alerts to Discord if any changes are detected.
+Simple nmap differ script, compares open ports using `diff`, and optionally sends alerts to Discord if any changes are detected.
 
 ## Setup
 
 1. **Edit the script** and replace:
-   - `ip="ENTER_YOUR_IP_HERE"` with your target IP or subnet (e.g., `192.168.1.0/24`)
+   - `ip="ENTER_YOUR_IP_HERE"` with your target IP
    - `discord_url="YOUR_DISCORD_WEBHOOK_URL"` with your actual Discord webhook URL.
 
 2. **Get a Discord webhook**:
@@ -18,9 +18,9 @@ Simple nmap differ script, compares open ports using `ndiff`, and optionally sen
    ```
    Add the following line to run the script every day at 8 AM:
    ```bash
-   0 8 * * * /full/path/to/nmap-port-differ.sh
+   0 8 * * * /full/path/to/nmapdiffer.sh
    ```
    Make sure the script is executable:
    ```bash
-   chmod +x /full/path/to/your/nmap-port-differ.sh
+   chmod +x /full/path/to/nmapdiffer.sh
    ```
