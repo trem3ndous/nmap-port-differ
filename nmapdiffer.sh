@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ### Config area ###
-ip="ENTER_TARGET_IP"
-discord_url="ENTER_DISCORD_WEBHOOK_URL"  # Leave empty if not using or use a different webhook it will probably works
+ip="ENTER_TARGET_URL"
+discord_url="https://discord.com/api/webhooks/ENTER_DISCORD_URL"  # Leave empty if not using or use a different webhook it will probably works
 ##################
 
 d=$(date +%Y-%m-%d)
@@ -34,7 +34,7 @@ else
   "content": $web_diff_output,
   "embeds": [{
     "title": "differ",
-    "description": "nmapdiffer",
+    "description": "$ip",
     "color": 45973
   }]
 }
