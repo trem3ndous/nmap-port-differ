@@ -1,7 +1,7 @@
 # Nmap Port Differ
 ![image](https://github.com/user-attachments/assets/1f7668cf-f22b-4e5d-affc-ee5d99ee3684)
 
-The flag grey line means the message was sent with >, meaining ports added. Messages with < mean that the port is down. 
+The flat grey line means the message was sent with >, meaining ports added. Messages with < mean that the port is down. 
 
 Simple nmap differ script, compares open ports using `diff`, and optionally sends alerts to Discord if any changes are detected.
 
