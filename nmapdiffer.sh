@@ -1,37 +1,50 @@
 #!/bin/bash
 
 ### Config area ###
-ip="ENTER_YOUR_IP_HERE"
-discord_url="YOUR_DISCORD_WEBHOOK_URL"  # Leave empty if not using or use a different webhook it will probably works
+ip="ENTER_TARGET_IP"
+discord_url="ENTER_DISCORD_WEBHOOK_URL"  # Leave empty if not using or use a different webhook it will probably works
 ##################
 
 d=$(date +%Y-%m-%d)
 
 # Check if the scan file exists
-if [ ! -e "nmapdiffer_scan.xml" ]; then
+if [ ! -e "nmap_scan" ]; then
     # First scan, no previous file
-    /usr/bin/nmap -sC -sV "$ip" -p- --open -oX "nmapdiffer_scan.xml" > /dev/null 2>&1
+    /usr/bin/nmap "$ip" | sed '1,4d; $d' > "nmap_scan"
 else
     # Run new scan
-    /usr/bin/nmap -sC -sV "$ip" -p- --open -oX "new_nmapdiffer_scan.xml" > /dev/null 2>&1
+    /usr/bin/nmap "$ip" | sed '1,4d; $d' > "new_nmap_scan"
 
     # Get diff output
-    diff_output=$(/usr/bin/ndiff "nmapdiffer_scan.xml" "new_nmapdiffer_scan.xml")
+    diff_output=$(/usr/bin/diff "nmap_scan" "new_nmap_scan")
 
     # Check if diff_output is non-empty
     if [ -n "$diff_output" ]; then
-        echo "$d - Differences found:" >> "nmaptcpdiff.log"
-        echo "$diff_output" >> "nmaptcpdiff.log"
+        echo "$d - Differences found:" >> "nmapdiff.log"
+        echo "$diff_output" >> "nmapdiff.log"
+    
+        # Convert to valid JSON
+        web_diff_output=$(printf '%s' "$diff_output" | jq -R -s '.')
 
         # Send to Discord if webhook URL is set
         if [ -n "$discord_url" ]; then
-            curl -H "Content-Type: application/json" \
-                 -X POST \
-                 -d "{\"content\":\"Nmap scan differences detected for $ip on $d:\n$diff_output\"}" \
-                 "$discord_url"
+            generate_post_data() {
+                cat <<EOF
+{
+  "content": $web_diff_output,
+  "embeds": [{
+    "title": "differ",
+    "description": "nmapdiffer",
+    "color": 45973
+  }]
+}
+EOF
+            }
+
+            curl -H "Content-Type: application/json" -X POST -d "$(generate_post_data)" "$discord_url"
         fi
     fi
 
     # Replace old scan with new
-    mv "new_nmapdiffer_scan.xml" "nmapdiffer_scan.xml"
+    mv "new_nmap_scan" "nmap_scan"
 fi
