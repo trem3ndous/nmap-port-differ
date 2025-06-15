@@ -1,4 +1,5 @@
 # Nmap Port Differ
+![image](https://github.com/user-attachments/assets/1f7668cf-f22b-4e5d-affc-ee5d99ee3684)
 
 Simple nmap differ script, compares open ports using `diff`, and optionally sends alerts to Discord if any changes are detected.
 
@@ -18,6 +19,7 @@ Simple nmap differ script, compares open ports using `diff`, and optionally send
    ```
    Add the following line to run the script every day at 8 AM:
    ```bash
+   
    0 8 * * * /full/path/to/nmapdiffer.sh
    ```
    Make sure the script is executable:
